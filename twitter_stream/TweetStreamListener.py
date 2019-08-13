@@ -1,10 +1,8 @@
 import json
-from typing import List, Tuple
-import logging
 from tweepy.streaming import StreamListener, Stream
 from tweepy import OAuthHandler, API
 from elasticsearch import Elasticsearch
-from config import *
+from twitter_stream.config import *
 
 es = Elasticsearch()
 
@@ -20,7 +18,6 @@ class Setup():
         stream.filter(track=["soccer transfer", "transfer news", "premier league"], is_async=True, languages=["en"])
         logging.basicConfig(filename="tweet_stream.log", level=logging.DEBUG)
         logging.info("Streaming Soccer Related Tweets\n")
-        self.all_ids = []
 
 
 class TweetStreamListener(StreamListener):
@@ -40,6 +37,7 @@ class TweetStreamListener(StreamListener):
                 tweet_data = user + tweet
                 logging.info(tweet_data + "\n")
                 print(tweet_data)
+                return tweet_data
 
 
     def filter(self, tweet):
