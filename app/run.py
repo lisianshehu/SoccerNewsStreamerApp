@@ -55,9 +55,27 @@ class TweetStreamListener(StreamListener):
             # logging.info("Tweet has been seen before")
             return False
 
+    def get_link(self, tweet):
+        tweet = str(tweet)
+        if tweet.find('https') != -1:
+            tweet_list = tweet.split('https:')
+            temp_link = tweet_list[1]
+            raw_tweet = tweet_list[0]
+            link = 'https:' + temp_link
+            # print("Link " + link)
+            tweet_payload = {'tweet': raw_tweet, 'tweet_link': link}
+            return tweet_payload
+        else:
+            tweet_payload = {'tweet': tweet, 'tweet_link': ""}
+            return tweet_payload
+
+
+
+
     def send_tweet(self, tweet):
         print("trying to pass tweet")
-        Sock().tweet_received(tweet)
+        tweet_payload = self.get_link(tweet)
+        Sock().tweet_received(tweet_payload)
 
     def on_status(self, status):
         print(status.text)
@@ -90,10 +108,11 @@ class Sock:
 
     @staticmethod
     @socketio.on('my event1')
-    def tweet_received(text):
-        text = str(text)
-        print("Tweet " + text)
-        socketio.emit('tweet_response', text, broadcast=True, namespace='/')
+    def tweet_received(tweet_payload: dict):
+        # text = str(text)
+        print("Tweet " + tweet_payload.get('tweet'))
+        print("Link " + tweet_payload.get('tweet_link'))
+        socketio.emit('tweet_response', tweet_payload, broadcast=True, namespace='/')
 
 
 

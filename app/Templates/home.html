@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-    <h1>Tweeter Stream</h1>
+    <h3>Tweeter Stream</h3>
+    <style>
+        div.stream{
+
+            color: #555;
+        }
+    </style>
     <div class = 'stream-wrapper'></div>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
@@ -12,8 +18,9 @@
 
         });
         socket.on('tweet_response', function(tweet) {
-            $('div.stream-wrapper').append('<div class ="stream">'+tweet+'</div>')
-            console.log(tweet);
+            $('div.stream-wrapper').append('<li class ="stream">'+tweet.tweet+'zz<a href='+tweet.tweet_link+'>'+tweet.tweet_link+'</a></li>')
+            console.log(tweet.tweet);
+            console.log(tweet.tweet_link);
         });
         socket.on('stinky', function(msg) {
             console.log(msg);
