@@ -1,26 +1,21 @@
-import json
-from tweepy.streaming import StreamListener, Stream
+from gevent import monkey
+monkey.patch_all()
+from flask import Flask, render_template
 from tweepy import OAuthHandler, API
-from elasticsearch import Elasticsearch
 from twitter_stream.config import *
+from flask_socketio import SocketIO, emit, send, Namespace
+from tweepy import StreamListener, Stream
 import logging
-import app.run
+import json
 
-es = Elasticsearch()
+app = Flask(__name__)
+socketio = SocketIO(app,async=True)
 
-
-class Setup():
-
-    def __init__(self):
-        listener = TweetStreamListener()
-        auth = OAuthHandler(consumer_key, consumer_secret)
-        auth.set_access_token(access_token, access_token_secret)
-        api = API(auth)
-        stream = Stream(auth, listener)
-        stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool"], is_async=True, languages=["en"])
-        logging.basicConfig(filename="tweet_stream.log", level=logging.DEBUG)
-        logging.info("Streaming Soccer Related Tweets\n")
-
+@app.route('/')
+@app.route('/home')
+def twitter_stream():
+    with app.app_context():
+        return render_template('home.html')
 
 class TweetStreamListener(StreamListener):
 
@@ -61,12 +56,49 @@ class TweetStreamListener(StreamListener):
             return False
 
     def send_tweet(self, tweet):
-        return tweet
+        print("trying to pass tweet")
+        Sock().tweet_received(tweet)
 
     def on_status(self, status):
         print(status.text)
-        app.run.tweet_recieved(status.text)
 
     def on_error(self, status):
         print(status)
+
+
+class Sock:
+
+    @staticmethod
+    @socketio.on('my event')
+    def connect(text):
+        listener = TweetStreamListener()
+        auth = OAuthHandler(consumer_key, consumer_secret)
+        auth.set_access_token(access_token, access_token_secret)
+        api = API(auth)
+        stream = Stream(auth, listener)
+        stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool", "Trump"], is_async=True,
+                      languages=["en"])
+        logging.basicConfig(filename="tweet_stream.log", level=logging.DEBUG)
+        logging.info("Streaming Soccer Related Tweets\n")
+        print(text)
+
+    # @staticmethod
+    # @socketio.on('my event2')
+    # def test_tweet(json):
+    #     print("Recieved: " + str(json))
+    #     emit('stinky', json)
+
+    @staticmethod
+    @socketio.on('my event1')
+    def tweet_received(text):
+        text = str(text)
+        print("Tweet " + text)
+        socketio.emit('tweet_response', text, broadcast=True, namespace='/')
+
+
+
+
+if __name__ == '__main__':
+    socketio.run(app, host='0.0.0.0',port=80, debug=True)
+
 
