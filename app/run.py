@@ -1,6 +1,7 @@
 from gevent import monkey
 monkey.patch_all()
 from flask import Flask, render_template
+from flask_bootstrap import Bootstrap
 from tweepy import OAuthHandler, API
 from twitter_stream.config import *
 from flask_socketio import SocketIO, emit, send, Namespace
@@ -9,7 +10,9 @@ import logging
 import json
 
 app = Flask(__name__)
-socketio = SocketIO(app,async=True)
+bootstrap = Bootstrap(app)
+app.static_folder = 'static'
+socketio = SocketIO(app, async=True)
 
 @app.route('/')
 @app.route('/home')
@@ -21,6 +24,7 @@ class TweetStreamListener(StreamListener):
 
     def __init__(self):
         self.all_ids = []
+        self.all_tweets = []
 
     def on_data(self, data):
         payload = json.loads(data)
@@ -30,11 +34,13 @@ class TweetStreamListener(StreamListener):
             tweet_id = payload["id"]
             user = payload["user"]["screen_name"]
             tweet = payload["text"]
-            if self.check_for_duplicates(tweet_id) and self.filter(tweet):
+            if self.check_for_duplicates(tweet_id, tweet) and self.filter(tweet):
                 tweet_data = user + tweet
                 logging.info(tweet_data + "\n")
                 self.send_tweet(tweet_data)
-                print(tweet_data)
+                # print(tweet_data)
+            # else:
+                # self.send_tweet("Duplicate")
 
 
     def filter(self, tweet):
@@ -46,10 +52,14 @@ class TweetStreamListener(StreamListener):
             # logging.debug("Tweet is invalid")
             return False
 
-    def check_for_duplicates(self, tweet_id) -> bool:
-        if tweet_id not in self.all_ids:
+    def check_for_duplicates(self, tweet_id, tweet_text) -> bool:
+        if tweet_id not in self.all_ids and tweet_text not in self.all_tweets:
             # logging.info("Tweet not seen before, adding to the list")
             self.all_ids.append(tweet_id)
+            print("tweet id: " + str(tweet_id))
+            print("checking tweet")
+            self.all_tweets.append(tweet_text)
+            print(self.all_ids)
             return True
         else:
             # logging.info("Tweet has been seen before")
@@ -68,8 +78,6 @@ class TweetStreamListener(StreamListener):
         else:
             tweet_payload = {'tweet': tweet, 'tweet_link': ""}
             return tweet_payload
-
-
 
 
     def send_tweet(self, tweet):
@@ -94,7 +102,7 @@ class Sock:
         auth.set_access_token(access_token, access_token_secret)
         api = API(auth)
         stream = Stream(auth, listener)
-        stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool", "Trump"], is_async=True,
+        stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool", "bayern munich, trump"], is_async=True,
                       languages=["en"])
         logging.basicConfig(filename="tweet_stream.log", level=logging.DEBUG)
         logging.info("Streaming Soccer Related Tweets\n")
