@@ -102,7 +102,7 @@ class Sock:
         auth.set_access_token(access_token, access_token_secret)
         api = API(auth)
         stream = Stream(auth, listener)
-        stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool", "bayern munich, trump"], is_async=True,
+        stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool", "manchester united"], is_async=True,
                       languages=["en"])
         logging.basicConfig(filename="tweet_stream.log", level=logging.DEBUG)
         logging.info("Streaming Soccer Related Tweets\n")
@@ -121,6 +121,7 @@ class Sock:
         print("Tweet " + tweet_payload.get('tweet'))
         print("Link " + tweet_payload.get('tweet_link'))
         socketio.emit('tweet_response', tweet_payload, broadcast=True, namespace='/')
+
 
 
 

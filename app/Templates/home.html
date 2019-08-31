@@ -8,13 +8,16 @@
         }
     </style>
     <div id = "homepage">
-        <!--<h3 class = "header">Twitter Stream</h3>-->
         <div class = "stream-wrapper">
-            <div class = "row">
-                <div class = "column" style="background-color:#bbb;">
-                    <h2 style = color:white;>You're Soccer News Twitter Stream</h2>
-                </div>
-                <!--<div class = "column" style="background-color:#aaa;"></div>-->
+            <div class="card scroll" style="width: 18rem;">
+              <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+              <div class="card-body">
+                <h5 class="card-title">Your Tweets</h5>
+                <!--<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+              </div>
+              <!--<div class="card-body">-->
+                <!--&lt;!&ndash;<a href="#" class="card-link">Card link</a>&ndash;&gt;-->
+              <!--</div>-->
             </div>
         </div>
     </div>
@@ -47,7 +50,7 @@
 
         });
         socket.on('tweet_response', function(tweet) {
-            $('div.column').append('<li class ="stream" = style = "color:white">'+tweet.tweet+'<a href='+tweet.tweet_link+'>'+tweet.tweet_link+'</a></li>')
+            $('div.card-body').append('<p class ="card-text">'+tweet.tweet+'<a href='+tweet.tweet_link+'>'+tweet.tweet_link+'</a></p>')
             console.log(tweet.tweet);
             console.log(tweet.tweet_link);
         });
