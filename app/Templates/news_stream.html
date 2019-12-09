@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-
     <div id = "homepage">
         <div class = "stream-wrapper">
             <div class="card scroll" style="width: 18rem;">
@@ -22,7 +21,7 @@
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
             socket.emit('my event', {data:'I\'m connected!'});
-            console.log("butthole?");
+            console.log("test");
 
         });
         socket.on('tweet_response', function(tweet) {

@@ -69,4 +69,3 @@ class TweetStreamListener(StreamListener):
 
     def on_error(self, status):
         print(status)
-

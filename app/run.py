@@ -12,13 +12,13 @@ import json
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 app.static_folder = 'static'
-socketio = SocketIO(app, async=True)
+socketio = SocketIO(app)
 
 @app.route('/')
 @app.route('/home')
 def twitter_stream():
     with app.app_context():
-        return render_template('home.html')
+        return render_template('news_stream.html')
 
 class TweetStreamListener(StreamListener):
 
@@ -102,7 +102,7 @@ class Sock:
         auth.set_access_token(access_token, access_token_secret)
         api = API(auth)
         stream = Stream(auth, listener)
-        stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool", "manchester united"], is_async=True,
+        stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool", "manchester united", "trump"], is_async=True,
                       languages=["en"])
         logging.basicConfig(filename="tweet_stream.log", level=logging.DEBUG)
         logging.info("Streaming Soccer Related Tweets\n")
@@ -122,11 +122,7 @@ class Sock:
         print("Link " + tweet_payload.get('tweet_link'))
         socketio.emit('tweet_response', tweet_payload, broadcast=True, namespace='/')
 
-
-
-
-
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0',port=80, debug=True)
+    app.run(host='0.0.0.0',port=80, debug=True)
 
 
