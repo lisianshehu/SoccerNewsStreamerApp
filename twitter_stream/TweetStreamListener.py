@@ -1,21 +1,17 @@
 import json
 from tweepy.streaming import StreamListener, Stream
-from tweepy import OAuthHandler, API
-from elasticsearch import Elasticsearch
-from twitter_stream.config import *
+from tweepy import OAuthHandler
+from app.config import *
 import logging
-import app.run
-
-es = Elasticsearch()
+# import app.run
 
 
-class Setup():
+class Setup:
 
     def __init__(self):
         listener = TweetStreamListener()
         auth = OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
-        api = API(auth)
         stream = Stream(auth, listener)
         stream.filter(track=["soccer transfer", "transfer news", "premier league", "liverpool"], is_async=True, languages=["en"])
         logging.basicConfig(filename="tweet_stream.log", level=logging.DEBUG)
@@ -29,8 +25,7 @@ class TweetStreamListener(StreamListener):
 
     def on_data(self, data):
         payload = json.loads(data)
-        decoded_data = json.dumps(payload, indent=4, sort_keys=True)
-        # print(decoded_data)
+        # decoded_data = json.dumps(payload, indent=4, sort_keys=True)
         if payload["user"]["verified"] is True or payload["user"]["followers_count"] > 100000:
             tweet_id = payload["id"]
             user = payload["user"]["screen_name"]
@@ -40,7 +35,6 @@ class TweetStreamListener(StreamListener):
                 logging.info(tweet_data + "\n")
                 self.send_tweet(tweet_data)
                 print(tweet_data)
-
 
     def filter(self, tweet):
         # print("This is the tweet that is being filtered: " + tweet)
@@ -69,3 +63,7 @@ class TweetStreamListener(StreamListener):
 
     def on_error(self, status):
         print(status)
+
+
+if __name__ == '__main__':
+    Setup()
