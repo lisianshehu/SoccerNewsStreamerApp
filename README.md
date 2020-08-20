@@ -19,9 +19,13 @@ The following steps will setup your development environment so you are able to m
     - Here is an example of a .env file:
         
        `CONSUMER_KEY="YOUR CONSUMER KEY"
+       
         CONSUMER_SECRET="YOUR CONSUMER SECRET"
+        
         ACCESS_TOKEN="YOUR ACCESS TOKEN"
+        
         ACCESS_TOKEN_SECRET="YOUR TOKEN SECRET"
+        
         KEYWORD_LIST="premier league,champions league"`
     - Replace your credentials in the first four lines and customize the keyword list to your preference
 4. Now the Dockerfile can be used to build and run the application
