@@ -8,3 +8,4 @@ app/config.py
 app/tweet_stream.log
 twitter_stream/tweet_stream.log
 .idea/workspace.xml
+/app/.env
