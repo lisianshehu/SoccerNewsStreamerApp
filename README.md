@@ -1,8 +1,18 @@
 # SoccerNewsStreamerApp
 
-Web Application that streams soccer news tweets using the Twitter Streaming API, that is integrated with Flask and Socket-IO to stream tweets in real-time to a web application.
+A small web application made using Flask and SocketIO to stream tweets in real-time using Twitter's StreamListener API
 
-Currently working on:
-  - Making customizable keywords and tweet stream preferences
-  - Other features of the web application such as other news streaming from different sources and front-end of the web      application
-  - Creating a RESTFUL API using Flask 
+## Installation
+Repository can be cloned by:
+1. Using the Github UI
+2. `git clone https://github.com/lisianshehu/SoccerNewsStreamerApp.git`
+
+## Usage Example
+1. This can be used to view live tweets based on a keyword or set of keywords specified 
+2. Can be used as a example or component to be added to a more wholesome web application 
+
+## Development Setup
+
+
+## Release History
+
