@@ -7,10 +7,13 @@ from flask_socketio import SocketIO
 from tweepy import StreamListener, Stream
 import logging
 import json
+import os
+from dotenv import load_dotenv
 
-app = Flask(__name__, static_folder='./static', template_folder='templates')
+app = Flask(__name__, static_folder='static', template_folder='templates')
 bootstrap = Bootstrap(app)
 socketio = SocketIO(app)
+
 
 @app.route('/')
 @app.route('/home')
@@ -83,11 +86,19 @@ class Sock:
     @staticmethod
     @socketio.on('connected')
     def connect(text):
+        dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+        load_dotenv(dotenv_path)
+
+        consumer_key = os.environ.get('CONSUMER_KEY')
+        consumer_secret = os.environ.get('CONSUMER_SECRET')
+        access_token = os.environ.get('ACCESS_TOKEN')
+        access_token_secret = os.environ.get('ACCESS_TOKEN_SECRET')
+        keyword_list = os.environ.get('KEYWORD_LIST').split(',')
         listener = TweetStreamListener()
         auth = OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
         stream = Stream(auth, listener)
-        stream.filter(track=["soccer transfer", "transfer news", "premier league", "trump"], is_async=True,
+        stream.filter(track=keyword_list, is_async=True,
                       languages=["en"])
         logging.basicConfig(filename="tweet_stream.log", level=logging.DEBUG)
         logging.info("Streaming Soccer Related Tweets\n")

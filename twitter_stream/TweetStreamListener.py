@@ -1,9 +1,7 @@
 import json
 from tweepy.streaming import StreamListener, Stream
 from tweepy import OAuthHandler
-from app.config import *
 import logging
-# import app.run
 
 
 class Setup:
