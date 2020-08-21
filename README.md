@@ -17,7 +17,7 @@ The following steps will setup your development environment so you are able to m
 2. Once you receive your developer API credentials, make a `.env` file in the `app` directory
 3. In the `.env` file you will add a few environment variables including your credentials and a comma separated list that will act as the keyword for the StreamListener
     - Here is an example of a .env file:
-        
+    
        `CONSUMER_KEY="YOUR CONSUMER KEY"
        
         CONSUMER_SECRET="YOUR CONSUMER SECRET"
@@ -36,3 +36,10 @@ The following steps will setup your development environment so you are able to m
 
 ## Release History
 
+* v1.0
+    * Basic web application functionality that streams tweets in real-time using Twitter's StreamListener API
+    
+* v2.0
+    * Improved web application that uses a HashSet to keep track of duplicate tweets for better runtime efficiency
+    * Uses Dockerfile to build and run web server on port 8080
+    * Uses .env file to use user credentials and customization of keyword-search for tweets to track
