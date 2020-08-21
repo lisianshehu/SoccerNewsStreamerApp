@@ -20,7 +20,7 @@
     <script type="text/javascript" charset="utf-8">
         var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('connect', function() {
-            socket.emit('my event', {data:'I\'m connected!'});
+            socket.emit('connected', {data:'I\'m connected!'});
             console.log("test");
 
         });
@@ -29,9 +29,5 @@
             console.log(tweet.tweet);
             console.log(tweet.tweet_link);
         });
-        socket.on('stinky', function(msg) {
-            console.log(msg);
-        });
-
     </script>
 {% endblock content %}
