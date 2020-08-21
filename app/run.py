@@ -88,12 +88,12 @@ class Sock:
     def connect(text):
         dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
         load_dotenv(dotenv_path)
-
         consumer_key = os.environ.get('CONSUMER_KEY')
         consumer_secret = os.environ.get('CONSUMER_SECRET')
         access_token = os.environ.get('ACCESS_TOKEN')
         access_token_secret = os.environ.get('ACCESS_TOKEN_SECRET')
         keyword_list = os.environ.get('KEYWORD_LIST').split(',')
+
         listener = TweetStreamListener()
         auth = OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
